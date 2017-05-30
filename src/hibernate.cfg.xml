@@ -2,9 +2,9 @@
 <hibernate-configuration>
 
     <session-factory>
-        <property name="connection.url">jdbc:db2://localhost:50001/vstud</property>
-        <property name="connection.username">student</property>
-        <property name="connection.password">abcdef</property>
+        <property name="connection.url">jdbc:db2://localhost:50000/vstud</property>
+        <property name="connection.username">vlajko</property>
+        <property name="connection.password">vlajko91</property>
         <property name="connection.driver_class">com.ibm.db2.jcc.DB2Driver</property>
         <property name="hibernate.dialect">org.hibernate.dialect.DB2Dialect</property>
     </session-factory>
