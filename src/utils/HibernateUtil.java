@@ -1,5 +1,6 @@
 package utils;
 
+import models.Ispit;
 import models.Smer;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -15,7 +16,8 @@ public class HibernateUtil {
         try {
             Configuration config = new Configuration();
             config.configure("hibernate.cfg.xml")
-                    .addAnnotatedClass(Smer.class);
+                    .addAnnotatedClass(Smer.class)
+                    .addAnnotatedClass(Ispit.class);
 
             sessionFactory = config.buildSessionFactory();
         } catch (Throwable e) {
