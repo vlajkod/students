@@ -1,7 +1,9 @@
 import models.Smer;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import services.DosijeService;
 import services.IspitService;
+import services.PredmetService;
 import services.SmerService;
 import utils.HibernateUtil;
 
@@ -17,7 +19,9 @@ public class App {
         System.out.println("Start App Here");
 
 //        SmerService.readSmer();
-        IspitService.readAllIspit();
+//        IspitService.readAllIspit();
+//        PredmetService.readPredmet();
+        DosijeService.readDosije();
         HibernateUtil.getSessionFactory().close();
         System.out.println("Kraj");
 
