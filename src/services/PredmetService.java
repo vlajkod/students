@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import utils.HibernateUtil;
 
+import org.hibernate.Query;
 import java.util.List;
 
 /**
@@ -30,4 +31,5 @@ public class PredmetService {
         }
 
     }
+
 }

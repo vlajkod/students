@@ -1,6 +1,7 @@
 package services;
 
 import models.Dosije;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import utils.HibernateUtil;
@@ -17,7 +18,8 @@ public class DosijeService {
         Transaction transaction = session.beginTransaction();
 
         try {
-            List<Dosije> dosije = session.createQuery("from Dosije").list();
+            Query q = session.createQuery("from Dosije");
+            List<Dosije> dosije = q.list();
             for(Dosije d: dosije) {
                 System.out.println(d.getIme() + " " + d.getPrezime() + " " + d.getIndeks());
             }

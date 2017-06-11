@@ -1,16 +1,21 @@
 package models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by vlajko on 5/31/17.
  */
+@NamedQueries(
+        value = {
+                @NamedQuery(name = "Ispit.byPredmet", query = "select distinct i.predmet " +
+                        "from Ispit i where i.godinaRoka = :godina and i.oznakaRoka = :oznaka"),
+                @NamedQuery(name = "Ispit.byDosije", query = "select distinct i.dosije from Ispit i where i.id.id_predmeta = :idPredmeta")
+        }
+)
 @Entity
 @Table(name = "ispit")
-public class Ispit {
+public class Ispit implements Serializable {
 
     @Id
     private IspitId id;
@@ -22,34 +27,34 @@ public class Ispit {
     private Integer semestar;
 
     @Column(name = "godina_roka", nullable = false)
-    private Integer godina_roka;
+    private Integer godinaRoka;
 
     @Column(name = "oznaka_roka", nullable = false)
-    private String oznaka_roka;
+    private String oznakaRoka;
 
     @Column(name = "datum_prijave", nullable = false)
-    private String datum_prijave;
+    private String datumPrijave;
 
     @Column(name = "nacin_prijave", nullable = false)
-    private String nacin_prijave;
+    private String nacinPrijave;
 
     @Column(name = "broj_polaganja", nullable = false)
-    private Integer broj_polaganja;
+    private Integer brojPolaganja;
 
     @Column(name = "status_prijave", nullable = false)
-    private String status_prijave = "o";
+    private String statusPrijave = "o";
 
     @Column(name = "datum_pismenog")
-    private String datum_pismenog;
+    private String datumPismenog;
 
     @Column(name = "bodovi_pismenog")
-    private Integer bodovi_pismenog;
+    private Integer bodoviPismenog;
 
     @Column(name = "datum_usmenog")
-    private String datum_usmenog;
+    private String datumUsmenog;
 
     @Column(name = "bodovi_usmenog")
-    private Integer bodovi_usmenog;
+    private Integer bodoviUsmenog;
 
     @Column(name = "bodovi")
     private Integer bodovi;
@@ -62,6 +67,14 @@ public class Ispit {
 
     @Column(name = "napomena")
     private String napomena;
+
+    @ManyToOne
+    @JoinColumn(name = "id_predmeta", insertable = false, updatable = false)
+    private Predmet predmet;
+
+    @ManyToOne
+    @JoinColumn(name = "indeks", insertable = false, updatable = false)
+    private Dosije dosije;
 
     public IspitId getId() {
         return id;
@@ -87,76 +100,84 @@ public class Ispit {
         this.semestar = semestar;
     }
 
-    public Integer getGodina_roka() {
-        return godina_roka;
+    public Integer getGodinaRoka() {
+        return godinaRoka;
     }
 
-    public void setGodina_roka(Integer godina_roka) {
-        this.godina_roka = godina_roka;
+    public void setGodinaRoka(Integer godinaRoka) {
+        this.godinaRoka = godinaRoka;
     }
 
-    public String getOznaka_roka() {
-        return oznaka_roka;
+    public String getOznakaRoka() {
+        return oznakaRoka;
     }
 
-    public void setOznaka_roka(String oznaka_roka) {
-        this.oznaka_roka = oznaka_roka;
+    public void setOznakaRoka(String oznakaRoka) {
+        this.oznakaRoka = oznakaRoka;
     }
 
-    public String getNacin_prijave() {
-        return nacin_prijave;
+    public String getDatumPrijave() {
+        return datumPrijave;
     }
 
-    public void setNacin_prijave(String nacin_prijave) {
-        this.nacin_prijave = nacin_prijave;
+    public void setDatumPrijave(String datumPrijave) {
+        this.datumPrijave = datumPrijave;
     }
 
-    public Integer getBroj_polaganja() {
-        return broj_polaganja;
+    public String getNacinPrijave() {
+        return nacinPrijave;
     }
 
-    public void setBroj_polaganja(Integer broj_polaganja) {
-        this.broj_polaganja = broj_polaganja;
+    public void setNacinPrijave(String nacinPrijave) {
+        this.nacinPrijave = nacinPrijave;
     }
 
-    public String getStatus_prijave() {
-        return status_prijave;
+    public Integer getBrojPolaganja() {
+        return brojPolaganja;
     }
 
-    public void setStatus_prijave(String status_prijave) {
-        this.status_prijave = status_prijave;
+    public void setBrojPolaganja(Integer brojPolaganja) {
+        this.brojPolaganja = brojPolaganja;
     }
 
-    public String getDatum_pismenog() {
-        return datum_pismenog;
+    public String getStatusPrijave() {
+        return statusPrijave;
     }
 
-    public void setDatum_pismenog(String datum_pismenog) {
-        this.datum_pismenog = datum_pismenog;
+    public void setStatusPrijave(String statusPrijave) {
+        this.statusPrijave = statusPrijave;
     }
 
-    public Integer getBodovi_pismenog() {
-        return bodovi_pismenog;
+    public String getDatumPismenog() {
+        return datumPismenog;
     }
 
-    public void setBodovi_pismenog(Integer bodovi_pismenog) {
-        this.bodovi_pismenog = bodovi_pismenog;
+    public void setDatumPismenog(String datumPismenog) {
+        this.datumPismenog = datumPismenog;
     }
 
-    public String getDatum_usmenog() {
-        return datum_usmenog;
+    public Integer getBodoviPismenog() {
+        return bodoviPismenog;
     }
 
-    public void setDatum_usmenog(String datum_usmenog) {
-        this.datum_usmenog = datum_usmenog;
+    public void setBodoviPismenog(Integer bodoviPismenog) {
+        this.bodoviPismenog = bodoviPismenog;
     }
 
-    public Integer getBodovi_usmenog() {
-        return bodovi_usmenog;
+    public String getDatumUsmenog() {
+        return datumUsmenog;
     }
 
-    public void setBodovi_usmenog(Integer bodovi_usmenog) {
-        this.bodovi_usmenog = bodovi_usmenog;
+    public void setDatumUsmenog(String datumUsmenog) {
+        this.datumUsmenog = datumUsmenog;
+    }
+
+    public Integer getBodoviUsmenog() {
+        return bodoviUsmenog;
+    }
+
+    public void setBodoviUsmenog(Integer bodoviUsmenog) {
+        this.bodoviUsmenog = bodoviUsmenog;
     }
 
     public Integer getBodovi() {

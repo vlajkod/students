@@ -1,15 +1,17 @@
 import javafx.application.Application;
-import javafx.beans.Observable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import models.Ispit;
+import models.Dosije;
+import models.Predmet;
 import services.IspitService;
 import utils.ValidationUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vlajko on 5/30/17.
@@ -26,6 +28,8 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("T07");
+        Map<String, Integer> mapPredmeti = new HashMap<String, Integer>();
+
 
         //container grid
         GridPane gridContainer = new GridPane();
@@ -75,26 +79,36 @@ public class App extends Application {
         GridPane.setConstraints(saveButton, 1,2);
 
         unesiButton.setOnAction(e -> {
+            listView.getItems().clear();
             if(ValidationUtils.isInt(unesiIndeksInput.getText())) {
                 int godina = Integer.parseInt(unesiIndeksInput.getText());
-                List<Ispit> ispiti = IspitService.readOne(godina);
-                if(ispiti.isEmpty()) {
+                List<Predmet> predmeti = IspitService.readPredmeti(godina);
+                if(predmeti.isEmpty()) {
                     System.out.println("Nema prijavljenih ispita za ovu godinu, pokusajte ponovo");
                     return;
                 }
-                listView.getItems().removeAll();
-                for(Ispit ispit: ispiti) {
-                    listView.getItems().addAll(ispit.getOznaka_roka() + ispit.getGodina_roka());
+
+                for(Predmet predmet: predmeti) {
+
+                    mapPredmeti.put(predmet.getNaziv(), predmet.getIdPredmeta());
+                    listView.getItems().add(predmet.getNaziv());
+
                 }
             };
         });
 
 
         prikaziButton.setOnAction(e -> {
-            System.out.println("radi");
-            Observable smer = listView.getSelectionModel().getSelectedItems();
-            String smerString = smer.toString();
-            System.out.println(smerString);
+            String smer = listView.getSelectionModel().getSelectedItems().toString();
+            int idPredmeta = mapPredmeti.get(smer.substring(1, smer.length() - 1));
+            System.out.println();
+            List<Dosije> dosije = IspitService.readDosije(idPredmeta);
+            listView1.getItems().clear();
+            for(Dosije d: dosije) {
+                listView1.getItems().add(d.getIme() + " " + d.getPrezime());
+                System.out.println(d.getIme() + " " + d.getPrezime());
+            }
+
         });
 
 

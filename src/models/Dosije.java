@@ -1,9 +1,7 @@
 package models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by vlajko on 6/1/17.
@@ -72,6 +70,9 @@ public class Dosije {
 
     @Column(name = "datum_upisa")
     private String datumUpisa;
+
+    @OneToMany(mappedBy = "dosije")
+    private List<Ispit> ispiti;
 
     public Integer getIndeks() {
         return indeks;

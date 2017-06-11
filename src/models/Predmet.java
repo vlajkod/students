@@ -1,16 +1,16 @@
 package models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by vlajko on 6/1/17.
  */
+//@NamedQuery(name = "Predmet.byIspit", query = "from Predmet p where p.ispiti.godinaRoka = ?")
 @Entity
 @Table(name = "predmet")
-public class Predmet {
+public class Predmet implements Serializable {
 
     @Id
     @Column(name = "id_predmeta")
@@ -27,6 +27,17 @@ public class Predmet {
 
     @Column(name = "bodovi")
     private Integer bodovi;
+
+    @OneToMany(mappedBy = "predmet")
+    List<Ispit> ispiti;
+
+    public List<Ispit> getIspiti() {
+        return ispiti;
+    }
+
+    public void setIspiti(List<Ispit> ispiti) {
+        this.ispiti = ispiti;
+    }
 
     public Integer getIdPredmeta() {
         return idPredmeta;

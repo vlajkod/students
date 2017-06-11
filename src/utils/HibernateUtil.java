@@ -3,7 +3,6 @@ package utils;
 import models.Dosije;
 import models.Ispit;
 import models.Predmet;
-import models.Smer;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -18,7 +17,6 @@ public class HibernateUtil {
         try {
             Configuration config = new Configuration();
             config.configure("hibernate.cfg.xml")
-                    .addAnnotatedClass(Smer.class)
                     .addAnnotatedClass(Ispit.class)
                     .addAnnotatedClass(Predmet.class)
                     .addAnnotatedClass(Dosije.class);
