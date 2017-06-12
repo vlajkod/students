@@ -1,12 +1,14 @@
+import gui.AlertBox;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import models.Dosije;
+import models.DosijeView;
 import models.Predmet;
 import services.IspitService;
+import utils.PrintUtil;
 import utils.ValidationUtils;
 
 import java.util.HashMap;
@@ -18,7 +20,9 @@ import java.util.Map;
  */
 public class App extends Application {
 
-    private Button button;
+    private Map<String, Predmet> mapPredmeti = new HashMap<String, Predmet>();
+    private int godinaRoka;
+    private String oznakaRoka;
 
     public static void main(String args[]) {
         launch(args);
@@ -28,7 +32,8 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("T07");
-        Map<String, Integer> mapPredmeti = new HashMap<String, Integer>();
+        PrintUtil printUtil = new PrintUtil();
+
 
 
         //container grid
@@ -69,28 +74,28 @@ public class App extends Application {
         GridPane.setConstraints(listView1,1,0);
 
 
-        Button unesiButton = new Button("Pretrazi");
-        GridPane.setConstraints(unesiButton, 2,0);
+        Button searchButton = new Button("Pretrazi");
+        GridPane.setConstraints(searchButton, 2,0);
 
-        Button prikaziButton = new Button("Prikazi");
-        GridPane.setConstraints(prikaziButton, 0,2);
+        Button showButton = new Button("Prikazi");
+        GridPane.setConstraints(showButton, 0,2);
 
         Button saveButton = new Button("Sacuvaj");
         GridPane.setConstraints(saveButton, 1,2);
 
-        unesiButton.setOnAction(e -> {
+        searchButton.setOnAction(e -> {
             listView.getItems().clear();
             if(ValidationUtils.isInt(unesiIndeksInput.getText())) {
-                int godina = Integer.parseInt(unesiIndeksInput.getText());
-                List<Predmet> predmeti = IspitService.readPredmeti(godina);
+                godinaRoka = Integer.parseInt(unesiIndeksInput.getText());
+                List<Predmet> predmeti = IspitService.readPredmeti(godinaRoka);
                 if(predmeti.isEmpty()) {
-                    System.out.println("Nema prijavljenih ispita za ovu godinu, pokusajte ponovo");
+                    AlertBox.display("Prijavljeni ispiti", "Nema prijavljenih ispita za ovu godinu, pokusajte ponovo");
                     return;
                 }
 
                 for(Predmet predmet: predmeti) {
 
-                    mapPredmeti.put(predmet.getNaziv(), predmet.getIdPredmeta());
+                    mapPredmeti.put(predmet.getNaziv(), predmet);
                     listView.getItems().add(predmet.getNaziv());
 
                 }
@@ -98,22 +103,30 @@ public class App extends Application {
         });
 
 
-        prikaziButton.setOnAction(e -> {
+        showButton.setOnAction(e -> {
             String smer = listView.getSelectionModel().getSelectedItems().toString();
-            int idPredmeta = mapPredmeti.get(smer.substring(1, smer.length() - 1));
-            System.out.println();
-            List<Dosije> dosije = IspitService.readDosije(idPredmeta);
+            if(smer.equals("[]")) {
+                AlertBox.display("Lista prazna", "Morate izabrati jedan predmet prvo");
+                return;
+            }
+            Predmet p = mapPredmeti.get(smer.substring(1, smer.length() - 1));
+            List<DosijeView> dosije = IspitService.readDosije(p.getIdPredmeta(), godinaRoka);
+            printUtil.setDosije(dosije);
+            printUtil.setPredmet(p);
             listView1.getItems().clear();
-            for(Dosije d: dosije) {
-                listView1.getItems().add(d.getIme() + " " + d.getPrezime());
-                System.out.println(d.getIme() + " " + d.getPrezime());
+            for(DosijeView d: dosije) {
+                listView1.getItems().add(d.getDosije().getIndeks() + " " + d.getDosije().getIme() + " " + d.getDosije().getPrezime() + " " + d.getBrPolaganja());
             }
 
         });
 
+        saveButton.setOnAction(e -> {
+            printUtil.saveFile(godinaRoka);
+        });
 
-        gridHeader.getChildren().addAll(unesiIndeks, unesiIndeksInput, unesiButton);
-        gridBody.getChildren().addAll(listView, prikaziButton, listView1, saveButton);
+
+        gridHeader.getChildren().addAll(unesiIndeks, unesiIndeksInput, searchButton);
+        gridBody.getChildren().addAll(listView, showButton, listView1, saveButton);
         gridContainer.getChildren().addAll(gridHeader, gridBody);
 
         Scene scene = new Scene(gridContainer, 800, 500);

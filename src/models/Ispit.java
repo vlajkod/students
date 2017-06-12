@@ -2,7 +2,6 @@ package models;
 
 import javax.persistence.*;
 import java.io.Serializable;
-
 /**
  * Created by vlajko on 5/31/17.
  */
@@ -10,7 +9,8 @@ import java.io.Serializable;
         value = {
                 @NamedQuery(name = "Ispit.byPredmet", query = "select distinct i.predmet " +
                         "from Ispit i where i.godinaRoka = :godina and i.oznakaRoka = :oznaka"),
-                @NamedQuery(name = "Ispit.byDosije", query = "select distinct i.dosije from Ispit i where i.id.id_predmeta = :idPredmeta")
+                @NamedQuery(name = "Ispit.byDosije", query = "select distinct new models.DosijeView(i.dosije, i.brojPolaganja) " +
+                        "from Ispit i where i.id.id_predmeta = :idPredmeta and i.godinaRoka = :godinaRoka and i.oznakaRoka = :oznakaRoka")
         }
 )
 @Entity
