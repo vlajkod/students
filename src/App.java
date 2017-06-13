@@ -21,7 +21,8 @@ public class App extends Application {
 
     private Map<String, Predmet> mapPredmeti = new HashMap<String, Predmet>();
     private int godinaRoka;
-    private String oznakaRoka;
+    private static ListView listView1;
+    private static ListView listView;
 
     public static void main(String args[]) {
         launch(args);
@@ -53,6 +54,11 @@ public class App extends Application {
         gridBody.setHgap(10);
         GridPane.setConstraints(gridBody, 0,1);
 
+        GridPane gridFooter = new GridPane();
+        gridFooter.setPadding(new Insets(10, 10, 10, 10));
+        gridFooter.setVgap(8);
+        gridFooter.setHgap(10);
+        GridPane.setConstraints(gridFooter, 0,3);
 
 
         Label unesiIndeks = new Label("Unesi godinu ispitnog roka:");
@@ -62,12 +68,12 @@ public class App extends Application {
         unesiIndeksInput.setPromptText("Unesite godinu roka");
         GridPane.setConstraints(unesiIndeksInput, 1, 0);
 
-        ListView listView = new ListView();
+        listView = new ListView();
         listView.setPrefSize(350, 400);
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         GridPane.setConstraints(listView,0,0);
 
-        ListView listView1 = new ListView();
+        listView1 = new ListView();
 //        listView.setPrefSize(550, 400);
         listView1.setMinSize(500, 400);
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -83,8 +89,14 @@ public class App extends Application {
         Button saveButton = new Button("Sacuvaj");
         GridPane.setConstraints(saveButton, 1,2);
 
+        Button startButton = new Button("Pocetak");
+        GridPane.setConstraints(startButton, 0,0);
+
+        Button stopButton = new Button("Kraj");
+        GridPane.setConstraints(stopButton, 1,0);
+
         searchButton.setOnAction(e -> {
-            listView.getItems().clear();
+            clearAll();
             if(ValidationUtils.isInt(unesiIndeksInput.getText())) {
                 godinaRoka = Integer.parseInt(unesiIndeksInput.getText());
                 List<Predmet> predmeti = IspitService.readPredmeti(godinaRoka);
@@ -123,12 +135,22 @@ public class App extends Application {
             printUtil.saveFile(godinaRoka);
         });
 
+        startButton.setOnAction(e -> clearAll());
+        stopButton.setOnAction(e -> primaryStage.close());
+
+
         gridHeader.getChildren().addAll(unesiIndeks, unesiIndeksInput, searchButton);
         gridBody.getChildren().addAll(listView, showButton, listView1, saveButton);
-        gridContainer.getChildren().addAll(gridHeader, gridBody);
+        gridFooter.getChildren().addAll(startButton, stopButton);
+        gridContainer.getChildren().addAll(gridHeader, gridBody, gridFooter);
 
         Scene scene = new Scene(gridContainer, 1000, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public static void clearAll() {
+        listView.getItems().clear();
+        listView1.getItems().clear();
     }
 }
