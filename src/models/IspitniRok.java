@@ -1,9 +1,7 @@
 package models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by vlajko on 6/13/17.
@@ -26,6 +24,9 @@ public class IspitniRok {
 
     @Column(name= "tip", nullable =false )
     private String Tip = "B";
+
+    @OneToMany(mappedBy = "ispitniRok")
+    private List<Ispit> ispiti;
 
 
 

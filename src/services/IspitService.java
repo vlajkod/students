@@ -24,7 +24,7 @@ public class IspitService {
         try {
             Query q = session.getNamedQuery("Ispit.byPredmet");
             q.setInteger("godina", godina);
-            q.setString("oznaka", "okt");
+            q.setString("tip", "X");
             predmeti = q.list();
             transaction.commit();
         } catch (Exception e) {
@@ -46,7 +46,7 @@ public class IspitService {
             Query q = session.getNamedQuery("Ispit.byDosije");
             q.setInteger("idPredmeta", idPredmeta);
             q.setInteger("godinaRoka", godinaRoka);
-            q.setString("oznakaRoka", "okt");
+            q.setString("tip", "X");
             dosijeView = q.list();
             transaction.commit();
         } catch (Exception e) {

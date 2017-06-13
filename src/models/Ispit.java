@@ -8,9 +8,9 @@ import java.io.Serializable;
 @NamedQueries(
         value = {
                 @NamedQuery(name = "Ispit.byPredmet", query = "select distinct i.predmet " +
-                        "from Ispit i where i.godinaRoka = :godina and i.oznakaRoka = :oznaka"),
+                        "from Ispit i where i.godinaRoka = :godina and i.ispitniRok.Tip = :tip"),
                 @NamedQuery(name = "Ispit.byDosije", query = "select distinct new models.DosijeView(i.dosije, i.brojPolaganja) " +
-                        "from Ispit i where i.id.id_predmeta = :idPredmeta and i.godinaRoka = :godinaRoka and i.oznakaRoka = :oznakaRoka")
+                        "from Ispit i where i.id.id_predmeta = :idPredmeta and i.godinaRoka = :godinaRoka and i.ispitniRok.Tip = :tip")
         }
 )
 @Entity
@@ -75,6 +75,14 @@ public class Ispit implements Serializable {
     @ManyToOne
     @JoinColumn(name = "indeks", insertable = false, updatable = false)
     private Dosije dosije;
+
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name="godina_roka", referencedColumnName="godina", insertable = false, updatable = false),
+            @JoinColumn(name="oznaka_roka", referencedColumnName="oznaka", insertable = false, updatable = false)
+    })
+    private IspitniRok ispitniRok;
+
 
     public IspitId getId() {
         return id;
