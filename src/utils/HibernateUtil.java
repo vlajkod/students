@@ -2,6 +2,7 @@ package utils;
 
 import models.Dosije;
 import models.Ispit;
+import models.IspitniRok;
 import models.Predmet;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -19,7 +20,8 @@ public class HibernateUtil {
             config.configure("hibernate.cfg.xml")
                     .addAnnotatedClass(Ispit.class)
                     .addAnnotatedClass(Predmet.class)
-                    .addAnnotatedClass(Dosije.class);
+                    .addAnnotatedClass(Dosije.class)
+                    .addAnnotatedClass(IspitniRok.class);
 
             sessionFactory = config.buildSessionFactory();
         } catch (Throwable e) {

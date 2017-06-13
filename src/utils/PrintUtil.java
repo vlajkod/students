@@ -17,13 +17,17 @@ public class PrintUtil {
     private List<DosijeView> dosije;
 
     public void saveFile(int godina) {
-        String fileName = "Oktobar" + godina + "_" + predmet.getSifra().trim() + "_" + predmet.getNaziv().trim() + ".txt";
-        File file = new File(fileName);
-        if(dosije.isEmpty() || predmet == null) {
-            AlertBox.display("Prazna Lista", "Nema Studenata na spisku");
+        String fileName;
+        File file;
+
+        if(ValidationUtils.isSaveFileValid(dosije, predmet, godina)) {
             return;
         }
+
+        fileName = "Oktobar" + godina + "_" + predmet.getSifra().trim() + "_" + predmet.getNaziv().trim() + ".txt";
         try {
+            file = new File(fileName);
+
             PrintWriter output = new PrintWriter(file);
             output.println("********************************************************************************************");
             output.println("Matematicki fakultet " + " " + " Oktobar: " + godina);
@@ -46,19 +50,8 @@ public class PrintUtil {
 
     }
 
-    public Predmet getPredmet() {
-        return this.predmet;
-    }
-
-    public void setPredmet(Predmet predmet) {
-        this.predmet = predmet;
-    }
-
-    public List<DosijeView> getDosije() {
-        return dosije;
-    }
-
-    public void setDosije(List<DosijeView> dosije) {
+    public void setDosijeAndPredmet(List<DosijeView> dosije, Predmet predmet) {
         this.dosije = dosije;
+        this.predmet = predmet;
     }
 }

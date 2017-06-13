@@ -1,4 +1,3 @@
-import gui.AlertBox;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -69,7 +68,8 @@ public class App extends Application {
         GridPane.setConstraints(listView,0,0);
 
         ListView listView1 = new ListView();
-        listView.setPrefSize(350, 400);
+//        listView.setPrefSize(550, 400);
+        listView1.setMinSize(500, 400);
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         GridPane.setConstraints(listView1,1,0);
 
@@ -88,8 +88,8 @@ public class App extends Application {
             if(ValidationUtils.isInt(unesiIndeksInput.getText())) {
                 godinaRoka = Integer.parseInt(unesiIndeksInput.getText());
                 List<Predmet> predmeti = IspitService.readPredmeti(godinaRoka);
-                if(predmeti.isEmpty()) {
-                    AlertBox.display("Prijavljeni ispiti", "Nema prijavljenih ispita za ovu godinu, pokusajte ponovo");
+
+                if(ValidationUtils.isSearchButtonValid(predmeti)){
                     return;
                 }
 
@@ -105,14 +105,13 @@ public class App extends Application {
 
         showButton.setOnAction(e -> {
             String smer = listView.getSelectionModel().getSelectedItems().toString();
-            if(smer.equals("[]")) {
-                AlertBox.display("Lista prazna", "Morate izabrati jedan predmet prvo");
+
+            if(ValidationUtils.isShowButtonValid(smer)) {
                 return;
             }
             Predmet p = mapPredmeti.get(smer.substring(1, smer.length() - 1));
             List<DosijeView> dosije = IspitService.readDosije(p.getIdPredmeta(), godinaRoka);
-            printUtil.setDosije(dosije);
-            printUtil.setPredmet(p);
+            printUtil.setDosijeAndPredmet(dosije, p);
             listView1.getItems().clear();
             for(DosijeView d: dosije) {
                 listView1.getItems().add(d.getDosije().getIndeks() + " " + d.getDosije().getIme() + " " + d.getDosije().getPrezime() + " " + d.getBrPolaganja());
@@ -124,12 +123,11 @@ public class App extends Application {
             printUtil.saveFile(godinaRoka);
         });
 
-
         gridHeader.getChildren().addAll(unesiIndeks, unesiIndeksInput, searchButton);
         gridBody.getChildren().addAll(listView, showButton, listView1, saveButton);
         gridContainer.getChildren().addAll(gridHeader, gridBody);
 
-        Scene scene = new Scene(gridContainer, 800, 500);
+        Scene scene = new Scene(gridContainer, 1000, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
